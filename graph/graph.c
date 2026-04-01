@@ -301,7 +301,6 @@ void drawGraph(Graph graph, char *filename, int type, int directed)
 
 void graphDFS(Graph graph, int vertex)
 {
-    // TODO: Test graph
     if ((vertex < 0) || (vertex >= graph.numberVertices))
     {
         printf("\033[1;31mVertex out of range in DFS search\033[0m\n");
@@ -316,9 +315,10 @@ void graphDFS(Graph graph, int vertex)
 
     while (!isStackEmpty(*stack))
     {
-        int current = pop(stack);
-
+        int current = peek(*stack);
         Cell *cell = graph.array[current];
+        int found_unvisited = 0;
+
         while (cell != NULL)
         {
             int neighbor = cell->value;
@@ -327,8 +327,15 @@ void graphDFS(Graph graph, int vertex)
                 visited[neighbor] = 1;
                 graph.parents[neighbor] = current;
                 push(stack, neighbor);
+                found_unvisited = 1;
+                break;
             }
             cell = cell->nextCell;
+        }
+
+        if (!found_unvisited)
+        {
+            pop(stack);
         }
     }
 
@@ -351,6 +358,40 @@ void graphDFS(Graph graph, int vertex)
  */
 void graphBFS(Graph graph, int vertex)
 {
+    if ((vertex < 0) || (vertex >= graph.numberVertices))
+    {
+        printf("\033[1;31mVertex out of range in DFS search\033[0m\n");
+        return;
+    }
+
+    int *visited = calloc(graph.numberVertices, sizeof(int));
+    Queue *queue = createQueue();
+
+    visited[vertex] = 1;
+    enqueue(queue, vertex);
+
+    while (!isQueueEmpty(*queue))
+    {
+        int current = dequeue(queue);
+        Cell *cell = graph.array[current];
+        int found_unvisited = 0;
+
+        while (cell != NULL)
+        {
+            int neighbor = cell->value;
+            if (!visited[neighbor])
+            {
+                visited[neighbor] = 1;
+                graph.parents[neighbor] = current;
+                enqueue(queue, neighbor);
+            }
+            cell = cell->nextCell;
+        }
+    }
+
+    free(queue);
+    free(visited);
+
     return;
 }
 

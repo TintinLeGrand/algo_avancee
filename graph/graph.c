@@ -358,6 +358,40 @@ void graphDFS(Graph graph, int vertex)
  */
 void graphBFS(Graph graph, int vertex)
 {
+    if ((vertex < 0) || (vertex >= graph.numberVertices))
+    {
+        printf("\033[1;31mVertex out of range in DFS search\033[0m\n");
+        return;
+    }
+
+    int *visited = calloc(graph.numberVertices, sizeof(int));
+    Queue *queue = createQueue();
+
+    visited[vertex] = 1;
+    enqueue(queue, vertex);
+
+    while (!isQueueEmpty(*queue))
+    {
+        int current = dequeue(queue);
+        Cell *cell = graph.array[current];
+        int found_unvisited = 0;
+
+        while (cell != NULL)
+        {
+            int neighbor = cell->value;
+            if (!visited[neighbor])
+            {
+                visited[neighbor] = 1;
+                graph.parents[neighbor] = current;
+                enqueue(queue, neighbor);
+            }
+            cell = cell->nextCell;
+        }
+    }
+
+    free(queue);
+    free(visited);
+
     return;
 }
 

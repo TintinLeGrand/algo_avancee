@@ -1,5 +1,6 @@
 *.o
 *.svg
+*.zip
 
 **/a.out
 dag/testtopo

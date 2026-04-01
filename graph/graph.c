@@ -36,7 +36,8 @@ double distance(double x1, double y1, double x2, double y2)
  *
  * Only the array of adjacency lists is updated.
  */
-void addEdgeInGraph(Graph graph, int origin, int destination) {
+void addEdgeInGraph(Graph graph, int origin, int destination)
+{
     // ça ajoute un element en tete de liste, et on a pas besion de key donc on met "", et value c'est le sommet de destination
     graph.array[origin] = addKeyValueInList(graph.array[origin], "", destination);
 }
@@ -68,42 +69,52 @@ Graph createGraph(int directed, int numVertices, double sigma)
     graph.sigma = sigma;
 
     // on reserve la memoire pour numVertices elements
-    graph.array = (List*) malloc(numVertices * sizeof(List));
-    graph.xCoordinates = (double*) malloc(numVertices * sizeof(double));
-    graph.yCoordinates = (double*) malloc(numVertices * sizeof(double));
-    graph.parents = (int*) malloc(numVertices * sizeof(int));
-    graph.topological_ordering = (int*) malloc(numVertices * sizeof(int));
-    graph.earliest_start = (double*)malloc(numVertices * sizeof(double));
-    graph.latest_start = (double*)malloc(numVertices * sizeof(double));
+    graph.array = (List *)malloc(numVertices * sizeof(List));
+    graph.xCoordinates = (double *)malloc(numVertices * sizeof(double));
+    graph.yCoordinates = (double *)malloc(numVertices * sizeof(double));
+    graph.parents = (int *)malloc(numVertices * sizeof(int));
+    graph.topological_ordering = (int *)malloc(numVertices * sizeof(int));
+    graph.earliest_start = (double *)malloc(numVertices * sizeof(double));
+    graph.latest_start = (double *)malloc(numVertices * sizeof(double));
 
     // on remplis les tableaux
-    for (int i = 0; i < numVertices; i++) {
-        graph.xCoordinates[i] = (double) rand()/RAND_MAX;
-        graph.yCoordinates[i] = (double) rand()/RAND_MAX; // pour faire des nombres random entre 0.0 et 1.0
+    for (int i = 0; i < numVertices; i++)
+    {
+        graph.xCoordinates[i] = (double)rand() / RAND_MAX;
+        graph.yCoordinates[i] = (double)rand() / RAND_MAX; // pour faire des nombres random entre 0.0 et 1.0
 
         graph.array[i] = NULL; // pour avoir la liste vide au debut
-        graph.parents[i] = -1 ;
-        graph.topological_ordering[i] = -1 ;
-        graph.earliest_start[i] = -1.0 ;
-        graph.latest_start[i] = -1.0 ;
+        graph.parents[i] = -1;
+        graph.topological_ordering[i] = -1;
+        graph.earliest_start[i] = -1.0;
+        graph.latest_start[i] = -1.0;
     }
 
     // on fait les arretes avec les distances et l'orientation
-    for (int i = 0; i < numVertices; i++) {
+    for (int i = 0; i < numVertices; i++)
+    {
         // on prend tous les autres sommets
-        for (int j = i + 1; j < numVertices; j++) { // i+1 pour pas avoir de doublon
-            
+        for (int j = i + 1; j < numVertices; j++)
+        { // i+1 pour pas avoir de doublon
+
             // on calcule la distance
             double dist = distance(graph.xCoordinates[i], graph.yCoordinates[i], graph.xCoordinates[j], graph.yCoordinates[j]);
 
-            if (dist < sigma) {
-                if (directed == 0) { // non orienté donc on met double arrete
+            if (dist < sigma)
+            {
+                if (directed == 0)
+                { // non orienté donc on met double arrete
                     addEdgeInGraph(graph, i, j);
                     addEdgeInGraph(graph, j, i);
-                } else { // orienté donc arrete du plus petit y vers le plus grand y
-                    if (graph.yCoordinates[i] < graph.yCoordinates[j]) {
+                }
+                else
+                { // orienté donc arrete du plus petit y vers le plus grand y
+                    if (graph.yCoordinates[i] < graph.yCoordinates[j])
+                    {
                         addEdgeInGraph(graph, i, j);
-                    } else if (graph.yCoordinates[j] < graph.yCoordinates[i]) {
+                    }
+                    else if (graph.yCoordinates[j] < graph.yCoordinates[i])
+                    {
                         addEdgeInGraph(graph, j, i);
                     }
                 }
@@ -118,20 +129,24 @@ Graph createGraph(int directed, int numVertices, double sigma)
  *
  * @param graph The graph to print.
  */
-void printConsoleGraph(Graph graph){
+void printConsoleGraph(Graph graph)
+{
     printf("---------------\n");
     printf("Print graph:\n");
 
-    for (int i = 0; i < graph.numberVertices; i++) {
+    for (int i = 0; i < graph.numberVertices; i++)
+    {
         printf("Vertex %d: (%f,%f)\n", i, graph.xCoordinates[i], graph.yCoordinates[i]);
     }
 
-    for (int i = 0; i < graph.numberVertices; i++) {
+    for (int i = 0; i < graph.numberVertices; i++)
+    {
         printf("Vertex %d: ", i);
         // pour le sommet i on prend le premier de la liste de ses liaisons
-        Cell* current = graph.array[i];
-        
-        while (current != NULL) { // jusqu'à NULL parce que c'est la fin
+        Cell *current = graph.array[i];
+
+        while (current != NULL)
+        { // jusqu'à NULL parce que c'est la fin
             printf("%d -> ", current->value);
             current = current->nextCell;
         }
@@ -139,19 +154,22 @@ void printConsoleGraph(Graph graph){
     }
 
     printf("parents: ");
-    for (int i = 0; i < graph.numberVertices; i++) {
+    for (int i = 0; i < graph.numberVertices; i++)
+    {
         printf("%d ", graph.parents[i]);
     }
     printf("\n");
 
     printf("Topological ordering:\n[");
-    for (int i = 0; i < graph.numberVertices; i++) {
+    for (int i = 0; i < graph.numberVertices; i++)
+    {
         printf("%d ", graph.topological_ordering[i]);
     }
     printf("]\n");
 
     printf("Print start dates:\n");
-    for (int i = 0; i < graph.numberVertices; i++) {
+    for (int i = 0; i < graph.numberVertices; i++)
+    {
         printf("vertex %d : [earliest start date=%.2f, latest start date=%.2f ]\n", i, graph.earliest_start[i], graph.latest_start[i]); // %.2f c'est pour les 2 chiffres apres la virgule
     }
     printf("---------------\n");
@@ -300,21 +318,23 @@ void graphDFS(Graph graph, int vertex)
     {
         int current = pop(stack);
 
-        if (visited[current] == NULL) {
-            visited[current]== 1;
-
-            Cell *cell = graph.array[current];
-            while (cell != NULL) {
-                cell = cell->nextCell;
-                if (visited[cell->value] != NULL) {
-                    push(stack, cell->value);
-                }
+        Cell *cell = graph.array[current];
+        while (cell != NULL)
+        {
+            int neigh = cell->value;
+            if (!visited[neigh])
+            {
+                visited[neigh] = 1;
+                graph.parents[neigh] = current;
+                push(stack, neigh);
             }
+            cell = cell->nextCell;
         }
     }
 
     free(stack);
     free(visited);
+
     return;
 }
 

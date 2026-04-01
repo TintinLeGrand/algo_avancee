@@ -22,10 +22,10 @@
  * @param y2 y coordinate of the second point.
  * @return The Euclidean distance between the input points
  */
-double distance(double x1, double y1, double x2, double y2){
-    return sqrt(pow(x1-x2,2)+pow(y1-y2,2));
+double distance(double x1, double y1, double x2, double y2)
+{
+    return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
 }
-
 
 /**
  * @brief Function to add an oriented edge in a graph.
@@ -36,10 +36,10 @@ double distance(double x1, double y1, double x2, double y2){
  *
  * Only the array of adjacency lists is updated.
  */
-void addEdgeInGraph(Graph graph, int origin, int destination) {
+void addEdgeInGraph(Graph graph, int origin, int destination)
+{
     return;
 }
-
 
 /**
  * @brief Function to create a random graph with a specified number of vertices and parameter sigma.
@@ -59,18 +59,19 @@ void addEdgeInGraph(Graph graph, int origin, int destination) {
  * and P2(x2,y2) if and only if the euclidean distance between P1 and P2 is
  * less than sigma.
  */
-Graph createGraph(int directed, int numVertices, double sigma) {
+Graph createGraph(int directed, int numVertices, double sigma)
+{
     Graph graph;
     return graph;
 }
-
 
 /**
  * @brief Function to print the graph in the console.
  *
  * @param graph The graph to print.
  */
-void printConsoleGraph(Graph graph){
+void printConsoleGraph(Graph graph)
+{
     return;
 }
 
@@ -83,14 +84,14 @@ void printConsoleGraph(Graph graph){
  * @param directed If directed==0, the graph is undirected and lines are drawn. Otherwise, arrows are drawn.
  */
 
-
-void drawGraph(Graph graph, char* filename, int type, int directed){
+void drawGraph(Graph graph, char *filename, int type, int directed)
+{
 
     FILE *fptr;
     fptr = fopen(filename, "w");
     if (fptr == NULL)
     {
-        printf("Error opening file %s\n",filename);
+        printf("Error opening file %s\n", filename);
         exit(-1);
     }
     fprintf(fptr, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
@@ -106,68 +107,80 @@ void drawGraph(Graph graph, char* filename, int type, int directed){
     fprintf(fptr, "</marker>\n");
     fprintf(fptr, "</defs>\n");
 
-    for(int i=0;i<graph.numberVertices;i++){
-        int x1 = (int) (600*graph.xCoordinates[i])+100;
-        int y1 = (int) (600*graph.yCoordinates[i])+100;
+    for (int i = 0; i < graph.numberVertices; i++)
+    {
+        int x1 = (int)(600 * graph.xCoordinates[i]) + 100;
+        int y1 = (int)(600 * graph.yCoordinates[i]) + 100;
         fprintf(fptr, "<circle cx=\"%d\" cy=\"%d\" r=\"%d\" fill=\"blue\" />\n", x1, y1, 3);
     }
 
-
-    for(int i=0;i<graph.numberVertices;i++){
-        int x1 = (int) (600*graph.xCoordinates[i])+100;
-        int y1 = (int) (600*graph.yCoordinates[i])+100;
+    for (int i = 0; i < graph.numberVertices; i++)
+    {
+        int x1 = (int)(600 * graph.xCoordinates[i]) + 100;
+        int y1 = (int)(600 * graph.yCoordinates[i]) + 100;
         fprintf(fptr, "<circle cx=\"%d\" cy=\"%d\" r=\"%d\" fill=\"blue\" />\n", x1, y1, 3);
-        for(int j=i+1;j<graph.numberVertices;j++)
-            if(distance(graph.xCoordinates[i],graph.yCoordinates[i],
-                        graph.xCoordinates[j],graph.yCoordinates[j]) <= graph.sigma){
-                int x2 = (int) (600*graph.xCoordinates[j])+100;
-                int y2 = (int) (600*graph.yCoordinates[j])+100;
+        for (int j = i + 1; j < graph.numberVertices; j++)
+            if (distance(graph.xCoordinates[i], graph.yCoordinates[i],
+                         graph.xCoordinates[j], graph.yCoordinates[j]) <= graph.sigma)
+            {
+                int x2 = (int)(600 * graph.xCoordinates[j]) + 100;
+                int y2 = (int)(600 * graph.yCoordinates[j]) + 100;
                 int xorigin, yorigin, xdestination, ydestination;
-                if(graph.yCoordinates[i]<graph.yCoordinates[j]){
-                    xorigin = x1; yorigin = y1;
-                    xdestination = x2; ydestination = y2;
+                if (graph.yCoordinates[i] < graph.yCoordinates[j])
+                {
+                    xorigin = x1;
+                    yorigin = y1;
+                    xdestination = x2;
+                    ydestination = y2;
                 }
-                else{
-                    xorigin = x2; yorigin = y2;
-                    xdestination = x1; ydestination = y1;
+                else
+                {
+                    xorigin = x2;
+                    yorigin = y2;
+                    xdestination = x1;
+                    ydestination = y1;
                 }
                 char arrow[30];
-                if(directed==1)
-                    strcpy(arrow,"marker-end=\"url(#arrow)\"");
+                if (directed == 1)
+                    strcpy(arrow, "marker-end=\"url(#arrow)\"");
                 else
-                    strcpy(arrow," ");
+                    strcpy(arrow, " ");
 
-                switch(type){
-                    case 0:
-                    case 3:
+                switch (type)
+                {
+                case 0:
+                case 3:
+                    fprintf(fptr, "<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\"\n",
+                            xorigin, yorigin, xdestination, ydestination);
+                    fprintf(fptr, "      style=\"stroke: darkgray;\" %s />\n", arrow);
+                    break;
+                case 1:
+                    if (graph.parents[i] == j || graph.parents[j] == i)
+                    {
                         fprintf(fptr, "<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\"\n",
                                 xorigin, yorigin, xdestination, ydestination);
-                        fprintf(fptr, "      style=\"stroke: darkgray;\" %s />\n",arrow);
-                        break;
-                    case 1:
-                        if(graph.parents[i]==j || graph.parents[j]==i){
-                            fprintf(fptr, "<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\"\n",
-                                    xorigin, yorigin, xdestination, ydestination);
-                            fprintf(fptr, "      style=\"stroke: red;\" %s />\n",arrow);
-                        }
-                        break;
-                    case 2:
-                        fprintf(fptr, "<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\"\n",
-                                xorigin, yorigin, xdestination, ydestination);
-                        if(graph.parents[i]==j || graph.parents[j]==i)
-                            fprintf(fptr, "      style=\"stroke: red;\" %s />\n",arrow);
-                        else
-                            fprintf(fptr, "      style=\"stroke: darkgray;\" %s />\n",arrow);
-                        break;
+                        fprintf(fptr, "      style=\"stroke: red;\" %s />\n", arrow);
+                    }
+                    break;
+                case 2:
+                    fprintf(fptr, "<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\"\n",
+                            xorigin, yorigin, xdestination, ydestination);
+                    if (graph.parents[i] == j || graph.parents[j] == i)
+                        fprintf(fptr, "      style=\"stroke: red;\" %s />\n", arrow);
+                    else
+                        fprintf(fptr, "      style=\"stroke: darkgray;\" %s />\n", arrow);
+                    break;
                 }
-        }
+            }
     }
-    if(type==3){
-        for(int i=0;i<graph.numberVertices;i++){
+    if (type == 3)
+    {
+        for (int i = 0; i < graph.numberVertices; i++)
+        {
             int vertex = graph.topological_ordering[i];
-            int x1 = (int) (600*graph.xCoordinates[vertex])+100;
-            int y1 = (int) (600*graph.yCoordinates[vertex])+100;
-            fprintf(fptr, "<text x=\"%d\" y=\"%d\" font-family=\"Verdana\" font-size=\"10\"> P%d:[%d,%.3lf,%.3lf]  </text>",x1+10,y1,vertex,i,graph.earliest_start[vertex],graph.latest_start[vertex]);
+            int x1 = (int)(600 * graph.xCoordinates[vertex]) + 100;
+            int y1 = (int)(600 * graph.yCoordinates[vertex]) + 100;
+            fprintf(fptr, "<text x=\"%d\" y=\"%d\" font-family=\"Verdana\" font-size=\"10\"> P%d:[%d,%.3lf,%.3lf]  </text>", x1 + 10, y1, vertex, i, graph.earliest_start[vertex], graph.latest_start[vertex]);
         }
     }
     fprintf(fptr, "</svg>\n");
@@ -186,11 +199,42 @@ void drawGraph(Graph graph, char* filename, int type, int directed){
  * must be initialized before calling the function.
  */
 
+void graphDFS(Graph graph, int vertex)
+{
+    // TODO: Test graph
+    if ((vertex < 0) || (vertex >= graph.numberVertices))
+    {
+        printf("\033[1;31mVertex out of range in DFS search\033[0m\n");
+        return;
+    }
 
-void graphDFS(Graph graph, int vertex) {
+    int *visited = calloc(graph.numberVertices, sizeof(int));
+    Stack *stack = createStack();
+
+    visited[vertex] = 1;
+    push(stack, vertex);
+
+    while (!isStackEmpty(*stack))
+    {
+        int current = pop(stack);
+
+        if (visited[current] == NULL) {
+            visited[current]== 1;
+
+            Cell *cell = graph.array[current];
+            while (cell != NULL) {
+                cell = cell->nextCell;
+                if (visited[cell->value] != NULL) {
+                    push(stack, cell->value);
+                }
+            }
+        }
+    }
+
+    free(stack);
+    free(visited);
     return;
 }
-
 
 /**
  * @brief Function that performs a breadth first search from a vertex.
@@ -203,10 +247,10 @@ void graphDFS(Graph graph, int vertex) {
  * Note that the array parents is not initialized in the function and
  * must be initialized before calling the function.
  */
-void graphBFS(Graph graph, int vertex){
+void graphBFS(Graph graph, int vertex)
+{
     return;
 }
-
 
 /**
  * @brief Function that counts te number of connex components in a graph and that computes a covering forest (one tree by components)
@@ -217,7 +261,7 @@ void graphBFS(Graph graph, int vertex){
  * computed by the breadth first search.
  * Note that the array parents is initialized in the function.
  */
-int numberOfComponents(Graph graph){
+int numberOfComponents(Graph graph)
+{
     return -1;
 }
-

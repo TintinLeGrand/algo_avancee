@@ -321,12 +321,12 @@ void graphDFS(Graph graph, int vertex)
         Cell *cell = graph.array[current];
         while (cell != NULL)
         {
-            int neigh = cell->value;
-            if (!visited[neigh])
+            int neighbor = cell->value;
+            if (!visited[neighbor])
             {
-                visited[neigh] = 1;
-                graph.parents[neigh] = current;
-                push(stack, neigh);
+                visited[neighbor] = 1;
+                graph.parents[neighbor] = current;
+                push(stack, neighbor);
             }
             cell = cell->nextCell;
         }

@@ -1,0 +1,11 @@
+*.o
+*.svg
+
+**/a.out
+dag/testtopo
+graph/testgraph
+heap/testheap
+list/testList
+queue/testqueue
+spanningtree/testprim
+stack/teststack

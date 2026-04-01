@@ -365,5 +365,19 @@ void graphBFS(Graph graph, int vertex)
  */
 int numberOfComponents(Graph graph)
 {
-    return -1;
+    int componentsCount = 0;
+
+    // on met tous les sommets en non visités
+    for (int i = 0; i < graph.numberVertices; i++) {
+        graph.parents[i] = -1;
+    }
+
+    // pour chaque sommet
+    for (int i = 0; i < graph.numberVertices; i++) {
+        if (graph.parents[i] == -1) { // si c'est -1 c'est pas visité donc c'est une nouvelle composante
+            componentsCount++;
+            graphDFS(graph, i); // parcour en profondeur pour visiter toute la composante
+        }
+    }
+    return componentsCount;
 }

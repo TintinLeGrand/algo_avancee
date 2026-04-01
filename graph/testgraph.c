@@ -6,12 +6,12 @@
 int main() {
     srand(time(NULL));
     // Create a graph
-    int n = 1000;
-    double sigma = 0.1;
+    int n = 6;
+    double sigma = 0.5;
     Graph graph = createGraph(0,n,sigma);
 
     // Print the graph to the console
-    //printConsoleGraph(graph);
+    printConsoleGraph(graph);
 
     // Draw the graph to a file
     //drawGraph(graph, "graph.svg",0,0);

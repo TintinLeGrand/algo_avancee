@@ -20,6 +20,40 @@
  * Note that the array parents must be initialized before calling the function.
  */
 void Prim(Graph g, int s){
-    return;
- }
+    Heap* heap = createHeap(g.numberVertices); // on cree le tas
+
+    // on init les distances
+    for (int i = 0; i < g.numberVertices; i++) {
+        if (i == s) {
+            insertHeap(heap, i, 0.0); // sommet debut distance 0 pour etre pris en premier
+        } else {
+            insertHeap(heap, i, 1000.0); // les autres disntance 1000 pour infini
+        }
+    }
+
+    while (heap->nbElements > 0) {
+        int u = removeElement(heap); // sommet le plus proche
+                
+        // on parcourt tous ses voisins
+        Cell* current = g.array[u];
+        while (current != NULL) {
+            int v = current->value;
+            
+            if (heap->position[v] != -1) { // si v encore dans le tas
+
+                double weight = distance(g.xCoordinates[u], g.yCoordinates[u], g.xCoordinates[v], g.yCoordinates[v]);
+                
+                if (weight < heap->priority[v]) { // si chemin meilleur
+                    g.parents[v] = u; // u devient parent de v
+                    modifyPriorityHeap(heap, v, weight); // priorité = nouveau poid
+                }
+            }
+            current = current->nextCell;
+        }
+    }
+    free(heap->heap);
+    free(heap->position);
+    free(heap->priority);
+    free(heap);
+}
 

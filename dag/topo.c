@@ -99,7 +99,55 @@ void topologicalSort(Graph graph){
  */
 
 void computeEarliestStartDates(Graph graph) {
-    return;
+    // Vérifie si la structure est correcte avantde passer au calcul
+    if (graph.numberVertices <= 0 || graph.array == NULL || graph.topological_ordering == NULL ||
+        graph.earliest_start == NULL || graph.xCoordinates == NULL || graph.yCoordinates == NULL) {
+        printf("\033[1;31mError: invalid graph structure for earliest start dates.\033[0m\n");
+        return;
+    }
+
+    int n = graph.numberVertices;
+
+    // Vérifie que l'ordre topologique est valide avant de calculer les dates
+    if (graph.topological_ordering[0] < 0 || graph.topological_ordering[0] >= n) {
+        topologicalSort(graph);
+    }
+
+    // Vérifie que l'ordre topologique est valide après le tri
+    if (graph.topological_ordering[0] < 0 || graph.topological_ordering[0] >= n) {
+        printf("\033[1;31mError: cannot compute earliest dates without a valid topological ordering.\033[0m\n");
+        return;
+    }
+
+    // Initialisation des dates au plus tôt à 0
+    for (int i = 0; i < n; i++) {
+        graph.earliest_start[i] = 0.0;
+    }
+
+    // Calcul des dates au plus tôt en suivant l'ordre topologique
+    for (int i = 0; i < n; i++) {
+        int vertex = graph.topological_ordering[i];
+        if (vertex < 0 || vertex >= n) {
+            printf("\033[1;31mError: invalid topological ordering entry.\033[0m\n");
+            return;
+        }
+
+        Cell *current = graph.array[vertex];
+        while (current != NULL) {
+            int neighbor = current->value;
+            double weight = distance(
+                graph.xCoordinates[vertex], graph.yCoordinates[vertex],
+                graph.xCoordinates[neighbor], graph.yCoordinates[neighbor]
+            );
+
+            double candidateDate = graph.earliest_start[vertex] + weight;
+            if (candidateDate > graph.earliest_start[neighbor]) {
+                graph.earliest_start[neighbor] = candidateDate;
+            }
+
+            current = current->nextCell;
+        }
+    }
 }
 
 

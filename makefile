@@ -16,7 +16,7 @@ clean-all:
 zip:
 	zip -r algo_avancee.zip . -x \
 		"*.o" "*.svg" "a.out" \
-		"dag/testtopo" "graph/testgraph" "heap/testHeap" "list/testList" "queue/testqueue" "spanningtree/testprim" "stack/teststack" \
+		"dag/testtopo" "dag/testtopo_unit" "graph/testgraph" "heap/testHeap" "list/testList" "queue/testqueue" "spanningtree/testprim" "stack/teststack" \
 		"algo_avancee.zip" \
 		".git/*" ".gitignore"
 

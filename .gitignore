@@ -4,6 +4,7 @@
 
 **/a.out
 dag/testtopo
+dag/testtopo_unit
 graph/testgraph
 heap/testHeap
 list/testList

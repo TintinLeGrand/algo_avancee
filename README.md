@@ -6,6 +6,10 @@ _Ce TP a été réalisé par Léni SOREL et Ethan LE NEINDRE, dans le cadre du c
 
 Chaque dossier contient un Makefile pour compiler les composants du projet. Le Makefile principal contient une commande `make all` qui permet de tout compiler, `make clean-all` pour tout nettoyer, et une commande `make zip` qui permet de zipper les fichiers sans inclure les binaires et fichiers inutiles (utilisé pour le rendu).
 
+## Test unitaires
+
+Pour topo, les test unitaires sont dans le fichier [testtopo_unit.c](./dag/testtopo_unit.c). Pour lancer les tests, faire la commande `make test` dans dag/.
+
 ## Crédits
 
 Pour les tests unitaires, la partie suivante a été faite à partir d'une conversation sur StackOverflow :

@@ -5,7 +5,7 @@
 **/a.out
 dag/testtopo
 graph/testgraph
-heap/testheap
+heap/testHeap
 list/testList
 queue/testqueue
 spanningtree/testprim

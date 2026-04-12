@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include "../graph/graph.h"
 #include "topo.h"
 
@@ -34,9 +35,13 @@ static Graph createGraphTest(int n) {
     g.numberVertices = n;
     g.array = (List *)calloc(n, sizeof(List));
     g.topological_ordering = (int *)malloc(n * sizeof(int));
+    g.xCoordinates = (double *)calloc(n, sizeof(double));
+    g.yCoordinates = (double *)calloc(n, sizeof(double));
+    g.earliest_start = (double *)malloc(n * sizeof(double));
 
     for (int i = 0; i < n; i++) {
         g.topological_ordering[i] = -1;
+        g.earliest_start[i] = -1.0;
     }
 
     return g;
@@ -49,6 +54,14 @@ static void freeGraphTest(Graph g) {
     }
     free(g.array);
     free(g.topological_ordering);
+    free(g.xCoordinates);
+    free(g.yCoordinates);
+    free(g.earliest_start);
+}
+
+// Fonction pour comparer deux doubles avec une tolérance (https://www.reddit.com/r/C_Programming/comments/4thsn7/comparing_doubles_in_c/?tl=fr)
+static int same(double a, double b) {
+    return fabs(a - b) < 1e-9;
 }
 
 // Fonction pour valider si l'ordre topologique est correct
@@ -170,6 +183,51 @@ static int test_cycle(void) {
     return 1;
 }
 
+// Tests unitaires pour la fonction computeEarliestStartDates
+static int test_earliest_chain(void) {
+    Graph g = createGraphTest(3);
+
+    g.xCoordinates[0] = 0.0; g.yCoordinates[0] = 0.0;
+    g.xCoordinates[1] = 1.0; g.yCoordinates[1] = 0.0;
+    g.xCoordinates[2] = 2.0; g.yCoordinates[2] = 0.0;
+
+    addEdgeInGraph(g, 0, 1);
+    addEdgeInGraph(g, 1, 2);
+
+    computeEarliestStartDates(g);
+
+    ASSERT_TRUE(same(g.earliest_start[0], 0.0), "Date au plus tot de 0 incorrecte");
+    ASSERT_TRUE(same(g.earliest_start[1], 1.0), "Date au plus tot de 1 incorrecte");
+    ASSERT_TRUE(same(g.earliest_start[2], 2.0), "Date au plus tot de 2 incorrecte");
+
+    freeGraphTest(g);
+    return 1;
+}
+
+static int test_earliest_two_paths(void) {
+    Graph g = createGraphTest(4);
+
+    g.xCoordinates[0] = 0.0; g.yCoordinates[0] = 0.0;
+    g.xCoordinates[1] = 1.0; g.yCoordinates[1] = 0.0;
+    g.xCoordinates[2] = 0.0; g.yCoordinates[2] = 2.0;
+    g.xCoordinates[3] = 1.0; g.yCoordinates[3] = 2.0;
+
+    addEdgeInGraph(g, 0, 1);
+    addEdgeInGraph(g, 0, 2);
+    addEdgeInGraph(g, 1, 3);
+    addEdgeInGraph(g, 2, 3);
+
+    computeEarliestStartDates(g);
+
+    ASSERT_TRUE(same(g.earliest_start[0], 0.0), "Date au plus tot de 0 incorrecte");
+    ASSERT_TRUE(same(g.earliest_start[1], 1.0), "Date au plus tot de 1 incorrecte");
+    ASSERT_TRUE(same(g.earliest_start[2], 2.0), "Date au plus tot de 2 incorrecte");
+    ASSERT_TRUE(same(g.earliest_start[3], 3.0), "Date au plus tot de 3 incorrecte");
+
+    freeGraphTest(g);
+    return 1;
+}
+
 // Lance des tests grâce à runTest
 int main(void) {
     int tests_run = 0;
@@ -179,6 +237,8 @@ int main(void) {
     runTest("test_multiple_sources", test_multiple_sources, &tests_run, &tests_failed);
     runTest("test_disconnected", test_disconnected, &tests_run, &tests_failed);
     runTest("test_cycle", test_cycle, &tests_run, &tests_failed);
+    runTest("test_earliest_chain", test_earliest_chain, &tests_run, &tests_failed);
+    runTest("test_earliest_two_paths", test_earliest_two_paths, &tests_run, &tests_failed);
 
     printf("\n%d/%d tests passed\n", tests_run - tests_failed, tests_run);
     if (tests_failed != 0) {

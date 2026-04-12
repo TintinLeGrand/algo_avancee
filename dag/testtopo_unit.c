@@ -29,7 +29,7 @@ static void runTest(const char *name, int (*testFunction)(void), int *tests_run,
 }
 
 // Fonction pour créer un graphe pour les tests
-static Graph createGraph(int n) {
+static Graph createGraphTest(int n) {
     Graph g = (Graph){0};
     g.numberVertices = n;
     g.array = (List *)calloc(n, sizeof(List));
@@ -43,7 +43,7 @@ static Graph createGraph(int n) {
 }
 
 // Fonction pour libérer la mémoire d'un graphe
-static void freeGraph(Graph g) {
+static void freeGraphTest(Graph g) {
     for (int i = 0; i < g.numberVertices; i++) {
         freeList(g.array[i]);
     }
@@ -113,7 +113,7 @@ static int allValuesNegative(Graph g) {
 // Tests unitaires pour la fonction topologicalSort
 //
 static int test_chain(void) {
-    Graph g = createGraph(4);
+    Graph g = createGraphTest(4);
     addEdgeInGraph(g, 0, 1);
     addEdgeInGraph(g, 1, 2);
     addEdgeInGraph(g, 2, 3);
@@ -122,12 +122,12 @@ static int test_chain(void) {
 
     ASSERT_TRUE(validateTopologicalOrder(g), "L'ordre topologique n'est pas valide.");
 
-    freeGraph(g);
+    freeGraphTest(g);
     return 1;
 }
 
 static int test_multiple_sources(void) {
-    Graph g = createGraph(6);
+    Graph g = createGraphTest(6);
     addEdgeInGraph(g, 0, 3);
     addEdgeInGraph(g, 1, 3);
     addEdgeInGraph(g, 1, 4);
@@ -138,12 +138,12 @@ static int test_multiple_sources(void) {
 
     ASSERT_TRUE(validateTopologicalOrder(g), "L'ordre topologique n'est pas valide.");
 
-    freeGraph(g);
+    freeGraphTest(g);
     return 1;
 }
 
 static int test_disconnected(void) {
-    Graph g = createGraph(6);
+    Graph g = createGraphTest(6);
     addEdgeInGraph(g, 0, 1);
     addEdgeInGraph(g, 2, 3);
     addEdgeInGraph(g, 4, 5);
@@ -152,12 +152,12 @@ static int test_disconnected(void) {
 
     ASSERT_TRUE(validateTopologicalOrder(g), "L'ordre topologique n'est pas valide.");
 
-    freeGraph(g);
+    freeGraphTest(g);
     return 1;
 }
 
 static int test_cycle(void) {
-    Graph g = createGraph(3);
+    Graph g = createGraphTest(3);
     addEdgeInGraph(g, 0, 1);
     addEdgeInGraph(g, 1, 2);
     addEdgeInGraph(g, 2, 0);
@@ -166,7 +166,7 @@ static int test_cycle(void) {
 
     ASSERT_TRUE(allValuesNegative(g), "Toutes les valeurs doivent être à -1");
 
-    freeGraph(g);
+    freeGraphTest(g);
     return 1;
 }
 

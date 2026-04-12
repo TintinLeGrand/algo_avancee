@@ -301,18 +301,21 @@ void drawGraph(Graph graph, char *filename, int type, int directed)
 
 void graphDFS(Graph graph, int vertex)
 {
+    // Vérification de la validité du sommet de départ
     if ((vertex < 0) || (vertex >= graph.numberVertices))
     {
         printf("\033[1;31mVertex out of range in DFS search\033[0m\n");
         return;
     }
 
+    // Initialisation des structures de données pour la DFS
     int *visited = calloc(graph.numberVertices, sizeof(int));
     Stack *stack = createStack();
 
     visited[vertex] = 1;
     push(stack, vertex);
 
+    // Parcours en profondeur du graphe
     while (!isStackEmpty(*stack))
     {
         int current = peek(*stack);
@@ -339,6 +342,7 @@ void graphDFS(Graph graph, int vertex)
         }
     }
 
+    // Libération des ressources utilisées
     free(stack);
     free(visited);
 
@@ -358,18 +362,21 @@ void graphDFS(Graph graph, int vertex)
  */
 void graphBFS(Graph graph, int vertex)
 {
+    // Vérification de la validité du sommet de départ
     if ((vertex < 0) || (vertex >= graph.numberVertices))
     {
         printf("\033[1;31mVertex out of range in DFS search\033[0m\n");
         return;
     }
 
+    // Initialisation des structures de données pour la BFS
     int *visited = calloc(graph.numberVertices, sizeof(int));
     Queue *queue = createQueue();
 
     visited[vertex] = 1;
     enqueue(queue, vertex);
 
+    // Parcours en largeur du graphe
     while (!isQueueEmpty(*queue))
     {
         int current = dequeue(queue);
@@ -389,6 +396,7 @@ void graphBFS(Graph graph, int vertex)
         }
     }
 
+    // Libération des ressources utilisées
     free(queue);
     free(visited);
 
